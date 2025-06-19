@@ -55,12 +55,11 @@
 							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"testpassword123\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8000/auth/register",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/auth/register",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"auth",
 								"register"
@@ -99,12 +98,11 @@
 							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"testpassword123\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8000/auth/login",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/auth/login",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"auth",
 								"login"
@@ -128,14 +126,27 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"device_id\": \"sensor_001\"\n}"
+						},
 						"url": {
-							"raw": "http://localhost:8000/auth/stream/token",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/auth/stream/token",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"auth",
 								"stream",
@@ -166,14 +177,19 @@
 							]
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8000/users/me",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/users/me",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"users",
 								"me"
@@ -203,14 +219,19 @@
 							]
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8000/devices/",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/devices/",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"devices",
 								""
@@ -238,6 +259,11 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -245,12 +271,11 @@
 							"raw": "{\n    \"name\": \"My IoT Sensor\",\n    \"device_id\": \"sensor_001\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8000/devices/",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/devices/",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"devices",
 								""
@@ -274,14 +299,19 @@
 							]
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8000/devices/1",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/devices/1",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"devices",
 								"1"
@@ -305,14 +335,19 @@
 							]
 						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8000/devices/1",
-							"protocol": "http",
+							"raw": "https://partner.eknow.in/devices/1",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"partner.eknow.in"
 							],
-							"port": "8000",
 							"path": [
 								"devices",
 								"1"
@@ -328,15 +363,30 @@
 		{
 			"name": "Health Check",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://localhost:8000/health",
-					"protocol": "http",
+					"raw": "https://partner.eknow.in/health",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"partner.eknow.in"
 					],
-					"port": "8000",
 					"path": [
 						"health"
 					]
@@ -351,12 +401,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8000/",
-					"protocol": "http",
+					"raw": "https://partner.eknow.in/",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"partner.eknow.in"
 					],
-					"port": "8000",
 					"path": [
 						""
 					]

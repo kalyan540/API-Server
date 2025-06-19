@@ -12,8 +12,8 @@ load_dotenv()
 JWT_SECRET_BASE64 = os.getenv("JWT_SECRET_BASE64", "WsNiwFBf2CJqVRz8/9OT58zgsXtRqArsUtvoeFrI+rc=")
 JWT_SECRET = base64.b64decode(JWT_SECRET_BASE64)
 JWT_ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-WEBSOCKET_TOKEN_EXPIRE_HOURS = 1  # Changed to 1 hour like MQTT example
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # 24 hours (24 * 60 minutes)
+WEBSOCKET_TOKEN_EXPIRE_HOURS = 24  # 24 hours
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -39,16 +39,14 @@ def create_access_token(user_id: int, email: str, role: str = "user") -> str:
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
-def create_websocket_token(user_id: int, email: str, device_topics: Optional[List[str]] = None) -> str:
+def create_websocket_token(user_id: int, email: str, device_id: str, device_topics: Optional[List[str]] = None) -> str:
     """Create a WebSocket/MQTT streaming token following the MQTT pattern"""
     expire = datetime.now(timezone.utc) + timedelta(hours=WEBSOCKET_TOKEN_EXPIRE_HOURS)
     
-    # Default topics based on user_id for device-specific streaming
+    # Default topics based on device_id for device-specific streaming
     if device_topics is None:
         device_topics = [
-            f"devices/{user_id}/#",  # All topics for user's devices
-            f"user/{user_id}/data",  # User-specific data topic
-            f"user/{user_id}/status" # User-specific status topic
+            f"devices/{device_id}/data"  # Device-specific data topic
         ]
     
     payload = {
@@ -56,8 +54,8 @@ def create_websocket_token(user_id: int, email: str, device_topics: Optional[Lis
         "iat": int(datetime.now(timezone.utc).timestamp()),
         "exp": int(expire.timestamp()),
         "subs": device_topics,  # Subscription topics user can listen to
-        "publ": [f"devices/{user_id}/commands"],  # Publish topics user can send to
-        "user_id": user_id,  # Additional user context
+        "publ": [],  # Publish topics user can send to
+        "device_id": device_id,  # Device context
         "type": "websocket"
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
@@ -78,6 +76,7 @@ def verify_websocket_token(token: str) -> Optional[dict]:
     if payload and payload.get("type") == "websocket":
         return {
             "user_id": payload.get("user_id"),
+            "device_id": payload.get("device_id"),
             "email": payload.get("sub"),
             "subscription_topics": payload.get("subs", []),
             "publish_topics": payload.get("publ", []),
