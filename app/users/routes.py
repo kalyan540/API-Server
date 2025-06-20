@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 from app.models.user import User
 from app.auth.routes import get_current_user
+from app.middleware import limiter
 from datetime import datetime
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -18,7 +19,8 @@ class UserInfo(BaseModel):
         from_attributes = True
 
 @router.get("/me", response_model=UserInfo)
-async def get_current_user_info(current_user: User = Depends(get_current_user)):
+@limiter.limit("30/minute")
+async def get_current_user_info(request: Request, current_user: User = Depends(get_current_user)):
     """Get current user's information including device count"""
     return UserInfo(
         id=current_user.id,

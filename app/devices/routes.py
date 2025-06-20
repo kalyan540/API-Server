@@ -33,7 +33,7 @@ class DeviceList(BaseModel):
     total: int
 
 @router.get("/", response_model=DeviceList)
-@limiter.limit("10/minute")
+@limiter.limit("30/minute")
 async def get_user_devices(request: Request, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get all devices belonging to the current user"""
     devices = db.query(Device).filter(Device.user_id == current_user.id).all()
@@ -44,7 +44,7 @@ async def get_user_devices(request: Request, current_user: User = Depends(get_cu
     )
 
 @router.post("/", response_model=DeviceResponse)
-@limiter.limit("10/minute")
+@limiter.limit("30/minute")
 async def create_device(request: Request, device_data: DeviceCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Register a new device for the current user"""
     # Generate device_id if not provided
@@ -73,7 +73,7 @@ async def create_device(request: Request, device_data: DeviceCreate, current_use
     return DeviceResponse.from_orm(new_device)
 
 @router.delete("/{device_id}")
-@limiter.limit("10/minute")
+@limiter.limit("30/minute")
 async def delete_device(request: Request, device_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Delete a device owned by the current user"""
     # Find device
@@ -95,7 +95,7 @@ async def delete_device(request: Request, device_id: int, current_user: User = D
     return {"message": f"Device {device.name} deleted successfully"}
 
 @router.get("/{device_id}", response_model=DeviceResponse)
-@limiter.limit("10/minute")
+@limiter.limit("30/minute")
 async def get_device(request: Request, device_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get a specific device owned by the current user"""
     device = db.query(Device).filter(
